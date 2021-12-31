@@ -1,4 +1,5 @@
-import styled from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
+import Image from 'next/image';
 
 export const StatusColors = {
   failed: '#b8234b',
@@ -24,18 +25,23 @@ export const ListItem = styled.li`
   padding: 1rem;
   width: 100%;
   display: flex;
+  justify-content: space-between;
   width: 100%;
   text-overflow: ellipsis;
   white-space: nowrap;
   min-width: 500px;
 
+  &:last-child {
+    border: none;
+  }
+`
+
+export const ImageInfo = styled.div`
+  display: flex;
+
   div {
     display: flex;
     flex-direction: column;
-  }
-
-  &:last-child {
-    border: none;
   }
 `
 
@@ -43,21 +49,47 @@ export const PreviewWrapper = styled.div`
   margin-right: 1rem;
   width: 2.5rem;
   height: 2.5rem;
+  position: relative;
 `
 
-export const Preview = styled.img`
-  width: 100%;
+export const Preview = styled(Image).attrs(() => ({
+  layout: 'fill',
+}))`
   height: 100%;
+  width: 100%;
   border-radius: 4px;
-  background-image: url(${({ src}) => src});
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: 50% 50%;
+
+  img {
+    border-radius: 4px;
+    object-fit: cover;
+  }
 `;
+
+const rotate = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+`
 
 export const StatusIndicator = styled.span<{ status: keyof typeof StatusColors }>`
   width: 100%;
   height: 100%;
   border-radius: 999px;
-  background: ${({ status = 'pending' }) => StatusColors[status]};
+  position: relative;
+
+  ${({ status }) => status === 'pending' && css`
+    animation: ${rotate} 450ms ease-in-out 0s infinite;
+  `}
+`
+
+export const DownloadButton = styled.a`
+  position: relative;
+  width: 2rem;
+  height: 2rem;
+  cursor: pointer;
+  text-decoration: none;
 `

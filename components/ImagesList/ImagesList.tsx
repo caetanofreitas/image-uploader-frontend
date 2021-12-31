@@ -1,4 +1,5 @@
 import filesize from "filesize";
+import Image from "next/image";
 import * as S from "./ImageList.styles";
 
 export type Image = {
@@ -21,16 +22,43 @@ const ImagesList = ({ images }: ImageListProps) => (
       <S.List>
         {images.map((image) => (
           <S.ListItem key={image.id}>
-            <S.PreviewWrapper>
-              {image.status === "uploaded" && <S.Preview src={image.url} />}
-              {image.status !== "uploaded" && (
-                <S.StatusIndicator status={image.status} />
-              )}
-            </S.PreviewWrapper>
-            <div>
-              <strong>{image.name}</strong>
-              <span>{filesize(image.size || 0)}</span>
-            </div>
+            <S.ImageInfo>
+              <S.PreviewWrapper>
+                {image.status === "uploaded" && (
+                  <S.Preview
+                    src={image.url.replace(process.env.NEXT_PUBLIC_S3_HOST, "")}
+                  />
+                )}
+                {image.status !== "uploaded" && (
+                  <S.StatusIndicator status={image.status}>
+                    <Image
+                      src={`/assets/${image.status}.svg`}
+                      alt="Upload Status"
+                      layout="fill"
+                      loader={({ src, width, quality }) =>
+                        `${src}?w=${width}&q=${quality || 75}`
+                      }
+                    />
+                  </S.StatusIndicator>
+                )}
+              </S.PreviewWrapper>
+              <div>
+                <strong>{image.name}</strong>
+                <span>{filesize(image.size || 0)}</span>
+              </div>
+            </S.ImageInfo>
+            {image.url && (
+              <S.DownloadButton download href={image.url}>
+                <Image
+                  src="/assets/download.svg"
+                  alt="Download Image"
+                  layout="fill"
+                  loader={({ src, width, quality }) =>
+                    `${src}?w=${width}&q=${quality || 75}`
+                  }
+                />
+              </S.DownloadButton>
+            )}
           </S.ListItem>
         ))}
       </S.List>
