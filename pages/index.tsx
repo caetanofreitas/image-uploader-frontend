@@ -100,6 +100,7 @@ const HomePage = ({ images }: HomeProps) => {
   return (
     <main>
       <section>
+        <p>No momento aceitamos apenas imagens JPG/JPEG/JFIF</p>
         <Upload onUpload={handleUpload} />
         {!!uploadedFiles.length && <FileList files={uploadedFiles} />}
       </section>

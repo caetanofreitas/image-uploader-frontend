@@ -35,4 +35,9 @@ export default createGlobalStyle`
       padding: 1rem;
     }
   }
+
+  p {
+    margin-bottom: 1rem;
+    color #808080;
+  }
 `;
