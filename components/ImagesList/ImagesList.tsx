@@ -48,7 +48,11 @@ const ImagesList = ({ images }: ImageListProps) => (
               </div>
             </S.ImageInfo>
             {image.url && (
-              <S.DownloadButton download href={image.url}>
+              <S.DownloadButton
+                href={image.url}
+                download={image.name}
+                target="_blank"
+              >
                 <Image
                   src="/assets/download.svg"
                   alt="Download Image"

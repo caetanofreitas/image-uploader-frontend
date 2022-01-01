@@ -6,6 +6,7 @@ import FileList from "../components/FileList";
 import { FileProps } from "../components/FileList/FileList";
 import ImagesList, { Image } from "../components/ImagesList/ImagesList";
 import api, { baseURL } from "../services/api";
+import Alert from "../components/Alert";
 
 type HomeProps = {
   images: Image[];
@@ -14,6 +15,8 @@ type HomeProps = {
 const HomePage = ({ images }: HomeProps) => {
   const [actualImages, setActualImages] = useState<Image[]>(images.reverse());
   const [uploadedFiles, setUploadedFiles] = useState<FileProps[]>([]);
+  const [showAlert, setShowAlert] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleUpdateState = (id: string, data) => {
     setUploadedFiles((actualFiles) =>
@@ -50,7 +53,8 @@ const HomePage = ({ images }: HomeProps) => {
       ]);
     } catch (err) {
       const { error } = err.response.data;
-      alert(error);
+      setErrorMessage(error);
+      setShowAlert(true);
       setUploadedFiles((upFiles) => upFiles.filter(({ id }) => id !== file.id));
       setActualImages((images) => [
         {
@@ -97,6 +101,13 @@ const HomePage = ({ images }: HomeProps) => {
     handleConnect();
   }, [handleConnect]);
 
+  useEffect(() => {
+    if (showAlert) {
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 10000);
+    }
+  }, [showAlert]);
   return (
     <main>
       <section>
@@ -107,6 +118,7 @@ const HomePage = ({ images }: HomeProps) => {
       <section>
         <ImagesList images={actualImages} />
       </section>
+      <Alert show={showAlert} message={errorMessage} />
     </main>
   );
 };
